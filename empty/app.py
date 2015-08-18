@@ -137,8 +137,8 @@ class Empty(Flask, LoggerMixin):
         from . import filters
 
         # adding two filters to our templates
-        self.jinja_env.filters['date'] = filters.format_date
-        self.jinja_env.filters['datetime'] = filters.format_datetime
+        self.add_template_filter(filters.format_date, 'date')
+        self.add_template_filter(filters.format_datetime, 'datetime')
 
     def configure_extensions(self):
         """
