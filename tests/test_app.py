@@ -1,15 +1,16 @@
 import pytest
 import os
-from empty import Empty
 from flask import Flask
 
 
 def test_empty_init_without_params():
+    from empty import Empty
     app = Empty('myapp')
     isinstance(app, Flask)
 
 
 def test_config_loading(test_configs):
+    from empty import Empty
     import config
     app = Empty('myapp')
     Config = config.EmptyConfig(DEBUG=True)
@@ -18,6 +19,7 @@ def test_config_loading(test_configs):
 
 
 def test_config_from_environment_has_precedence(test_configs):
+    from empty import Empty
     import config, env_config
 
     os.environ['APP_CONFIG'] = os.path.abspath('tests/test_configs/env_config.py')
