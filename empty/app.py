@@ -11,12 +11,13 @@ from .loading import *
 from .logging import LoggerMixin
 
 
-# apps is a special folder where you can place your blueprints
 PROJECT_PATH = os.path.abspath(os.path.dirname("."))
 
-# default folder for blueprints
+# apps is a special folder where you can place your blueprints
+# adding it to path
 sys.path.insert(0, os.path.join(PROJECT_PATH, "apps"))
 
+# python3 friendly
 basestring = getattr(__builtins__, 'basestring', str)
 
 
@@ -49,8 +50,8 @@ class Empty(Flask, LoggerMixin):
                 name = blueprint_config[0]
                 kw.update(blueprint_config[1])
             else:
-                print "Error in BLUEPRINTS setup in config.py"
-                print "Please, verify if each blueprint setup is either a string or a tuple."
+                print("Error in BLUEPRINTS setup in config.py")
+                print("Please, verify if each blueprint setup is either a string or a tuple.")
                 exit(1)
 
             self.add_blueprint(name, kw)
@@ -134,6 +135,8 @@ class Empty(Flask, LoggerMixin):
         Configure filters and tags for jinja
         """
         from . import filters
+
+        # adding two filters to our templates
         self.jinja_env.filters['date'] = filters.format_date
         self.jinja_env.filters['datetime'] = filters.format_datetime
 
@@ -146,7 +149,7 @@ class Empty(Flask, LoggerMixin):
             from flask_debugtoolbar import DebugToolbarExtension
             DebugToolbarExtension(self)
         except ImportError, e:
-            print 'debugtoolbar extension not available.'
+            print('debugtoolbar extension not available.')
 
     def configure_before_request(self):
         pass
@@ -159,6 +162,9 @@ class Empty(Flask, LoggerMixin):
 
 
 def config_str_to_obj(cfg):
+    """
+    Translates a string path into the actual configuration Object
+    """
     if isinstance(cfg, basestring):
         module = __import__('config', fromlist=[cfg])
         return getattr(module, cfg)
@@ -166,8 +172,8 @@ def config_str_to_obj(cfg):
 
 
 def app_factory(config, app_name, blueprints=None, base_application=Empty):
-    # you can use Empty directly if you wish
-    template_folder = os.path.join(PROJECT_PATH, "templates")  # openshift fix
+    # explicitly pass templates folder to avoid environment problems
+    template_folder = os.path.join(PROJECT_PATH, "templates")
     app = base_application(app_name, template_folder=template_folder)
     config = config_str_to_obj(config)
 
