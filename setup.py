@@ -4,6 +4,7 @@ setup(
     name='Empty',
     version='0.1',
     license='BSD',
+    url='https://github.com/italomaia/empty',
     author='Italo Moreira Campelo Maia',
     description='Wrapper which makes Flask development easier',
     platforms='any',
