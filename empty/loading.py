@@ -23,6 +23,11 @@ def import_variable(bp, module, varname):
 
 
 def load_blueprint(bp, module='views', varname='app'):
+    """
+    Loads the blueprint instance of your blueprint
+
+    bp -- blueprint name
+    """
     return import_variable(bp, module, varname)
 
 
@@ -31,6 +36,8 @@ def load_schema(path):
     Loads a Schema based on the model name. Expects schemas
     to be in a module called schemas.
     Useful when using the marshmallow library.
+
+    path -- blueprint.ModelName
     """
     bp, model = path.split('.')
     return import_variable(bp, 'schemas', '%sSchema' % model)
@@ -41,6 +48,8 @@ def load_model(path):
     Loads a model name. Expects models to be in a module
     called models.
     Useful when using the marshmallow library.
+
+    path -- blueprint.ModelName
     """
     bp, model = path.split('.')
     return import_variable(bp, 'models', model)
