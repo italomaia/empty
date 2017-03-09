@@ -1,4 +1,4 @@
-import pytest
+import pytest  # noqa: F401
 import os
 from flask import Flask
 
@@ -20,11 +20,12 @@ def test_config_loading(test_configs):
 
 def test_config_from_environment_has_precedence(test_configs):
     from empty import Empty
-    import config, env_config
+    import config
+    import env_config
 
-    os.environ['APP_CONFIG'] = os.path.abspath('tests/test_configs/env_config.py')
+    os.environ['FLASK_CONFIG'] = os.path\
+        .abspath('tests/test_configs/env_config.py')
     app = Empty('myapp')
     Config = config.EmptyConfig(DEBUG=not env_config.DEBUG)
     app.configure(Config)
     assert app.config['DEBUG'] is env_config.DEBUG
-
