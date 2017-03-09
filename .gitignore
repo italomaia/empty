@@ -2,6 +2,7 @@
 .vscode
 .idea
 .tox
+.cache
 *.pyc
 
 Empty.egg-info
