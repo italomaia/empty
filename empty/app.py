@@ -21,6 +21,16 @@ from .exceptions import NoExtensionException
 
 PROJECT_PATH = os.path.abspath(os.path.dirname("."))
 
+# list of blueprint modules that should be loaded by default
+# this avoids a few problems, mostly with admin and models
+DEFAULT_BP_MODULES = (
+    'admin',
+    'models',
+    'schemas',
+    'views',
+    'api',
+)
+
 # apps is a special folder where you can place your blueprints
 # adding it to path
 sys.path.insert(0, os.path.join(PROJECT_PATH, "apps"))
@@ -43,7 +53,7 @@ class Empty(Flask, LoggerMixin):
         self.config.from_envvar("FLASK_CONFIG", silent=True)
 
     def add_blueprint(self, name, kw):
-        for module in self.config['LOAD_MODULES_EXTENSIONS']:
+        for module in self.config.get('BP_MODULES', DEFAULT_BP_MODULES):
             try:
                 __import__('%s.%s' % (name, module), fromlist=['*'])
             except (ImportError, AttributeError):
@@ -162,9 +172,11 @@ class Empty(Flask, LoggerMixin):
                 raise NoExtensionException(ext_path)
 
             try:
+                # do you need extra arguments to initialize
+                # your extension?
                 init_kwargs = import_string('%s_init_kwargs')()
             except ImportError:
-                # no problems here
+                # maybe not
                 init_kwargs = dict()
 
             init_fnc = getattr(ext, 'init_app', False) or ext
