@@ -1,3 +1,5 @@
+"""Extra Jinja2 filters."""
+
 from flask import current_app
 
 

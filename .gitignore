@@ -1,6 +1,8 @@
 # Created by .ignore support plugin (hsz.mobi)
+.vscode
 .idea
 .tox
+.cache
 *.pyc
 
 Empty.egg-info

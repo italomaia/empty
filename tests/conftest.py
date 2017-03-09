@@ -22,7 +22,7 @@ def test_configs(monkeypatch):
 
 @pytest.fixture
 def modules_tmpdir(tmpdir, monkeypatch):
-    """A tmpdir added to sys.path"""
+    """A tmpdir added to sys.path."""
     rv = tmpdir.mkdir('modules_tmpdir')
     monkeypatch.syspath_prepend(str(rv))
     return rv
