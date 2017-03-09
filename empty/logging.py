@@ -1,5 +1,6 @@
-# -*- coding:utf-8 -*-
+# coding:utf-8
 import logging
+
 
 class LoggerMixin(object):
     def configure_file_logger(self):
@@ -10,7 +11,11 @@ class LoggerMixin(object):
 
             # Create a file logger since we got a logdir
             file_handler = RotatingFileHandler(
-                filename=log_filename, encoding='utf-8', maxBytes=1024*1024*32, backupCount=2)
+                filename=log_filename,
+                encoding='utf-8',
+                maxBytes=1024 * 1024 * 8,
+                backupCount=2)
+
             formatter = logging.Formatter(self.config['LOG_FORMAT'])
             file_handler.setFormatter(formatter)
             log_level = self.config.get('LOG_LEVEL', logging.WARNING)
@@ -33,8 +38,10 @@ class LoggerMixin(object):
 
             # as we have admins, mail logging to them
             email_handler = SMTPHandler(
-                email_host, from_email, admins_mail,
-                '%s Failed' % project_name.capitalize())
+                email_host,
+                from_email,
+                admins_mail,
+                '%s Fail' % self.name.capitalize())
 
             email_handler.setLevel(log_level)
             self.logger.addHandler(email_handler)
