@@ -20,6 +20,7 @@ Usage
 Creating your firs Empty application is quite simple. Just do the following:
 
 .. code:: python
+
     from empty import Empty
 
     app = Empty('project-name')
@@ -31,6 +32,7 @@ just define a environment variable called **FLASK_CONFIG**
 pointing to the configuration file, which can be a python file.
 
 .. code:: python
+
     FLASK_CONFIG=config/dev.py
     # or
     FLASK_CONFIG=config/testing.py
@@ -40,6 +42,7 @@ In your configuration file (FLASK_CONFIG), set a variable
 called **EXTENSIONS** with the full path to your extension.
 
 .. code:: python
+
     # file: extensions.py
     from flask_sqlalchemy import SQLAlchemy
     db = SQLAlchemy()
