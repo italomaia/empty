@@ -30,13 +30,6 @@ string_types = six.string_types
 
 
 class Empty(Flask, LoggerMixin):
-    # see: http://jinja.pocoo.org/docs/extensions/
-    # configure extensions to be loaded here
-    JINJA2_EXTENSIONS = list()
-    # configure filters to be loaded here
-    JINJA2_FILTERS = dict()  # name: filter
-    TEMPLATES_FOLDER = None
-
     def configure(self, config):
         """
         Loads configuration class into flask app.
