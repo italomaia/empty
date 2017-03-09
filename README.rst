@@ -19,38 +19,35 @@ Usage
 
 Creating your firs Empty application is quite simple. Just do the following:
 
-```
-from empty import Empty
+.. code:: python
+    from empty import Empty
 
-app = Empty('project-name')
-app.run()
-```
+    app = Empty('project-name')
+    app.run()
 
 All nice and cuzzy. Now, imagine you would like to load custom
 configuration rules in your application. To do that,
 just define a environment variable called **FLASK_CONFIG**
 pointing to the configuration file, which can be a python file.
 
-```
-FLASK_CONFIG=config/dev.py
-# or
-FLASK_CONFIG=config/testing.py
-```
+.. code:: python
+    FLASK_CONFIG=config/dev.py
+    # or
+    FLASK_CONFIG=config/testing.py
 
 Now, what if you want to add a few extensions to your project?
 In your configuration file (FLASK_CONFIG), set a variable
 called **EXTENSIONS** with the full path to your extension.
 
-```
-# file: extensions.py
-from flask_sqlalchemy import SQLAlchemy
-db = SQLAlchemy()
+.. code:: python
+    # file: extensions.py
+    from flask_sqlalchemy import SQLAlchemy
+    db = SQLAlchemy()
 
-# config/dev.py
-EXTENSIONS = [
-    'extensions.db'
-]  # and that's it!
-```
+    # config/dev.py
+    EXTENSIONS = [
+        'extensions.db'
+    ]  # and that's it!
 
 Your extension will be loaded and initialized for you.
 
