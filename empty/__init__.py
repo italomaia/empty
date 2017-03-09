@@ -2,5 +2,5 @@
 
 __version__ = '0.1'
 
-from app import Empty  # noqa: F401
-from app import app_factory  # noqa: F401
+from .app import Empty  # noqa: F401
+from .app import app_factory  # noqa: F401
