@@ -1,4 +1,6 @@
-# -*- coding:utf-8 -*-
+# coding:utf-8
 
 __version__ = '0.1'
-from app import *
+
+from app import Empty  # noqa: F401
+from app import app_factory  # noqa: F401
