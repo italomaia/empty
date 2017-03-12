@@ -1,7 +1,11 @@
+from empty import Empty
+from empty import app_factory
+from .config import EmptyConfig
+
+from flask import render_template_string
+
 import unittest
 from datetime import date, datetime
-from flask import render_template_string
-from empty import Empty, app_factory
 
 
 class EmptyWithDateFilter(Empty):
@@ -19,7 +23,7 @@ class EmptyWithDatetimeFilter(Empty):
 class TestFilters(unittest.TestCase):
     def test_date_output_format(self):
         app = app_factory(
-            object, 'myapp', base_application=EmptyWithDateFilter)
+            EmptyConfig(), 'myapp', base_application=EmptyWithDateFilter)
         today = date(year=2015, month=10, day=5)
 
         with app.app_context():
@@ -42,7 +46,7 @@ class TestFilters(unittest.TestCase):
 
     def test_datetime_output_format(self):
         app = app_factory(
-            object, 'myapp',
+            EmptyConfig(), 'myapp',
             base_application=EmptyWithDatetimeFilter)
         now = datetime(
             year=2015,
