@@ -21,9 +21,18 @@ Creating your firs Empty application is quite simple. Just do the following:
 
 .. code:: python
 
+    from empty import app_factory
+    import config  # your config module
+
+    app = app_factory(config, 'project-name')
+    app.run()
+
+    # or
     from empty import Empty
+    import config  # your config module
 
     app = Empty('project-name')
+    app.configure(config)
     app.run()
 
 All nice and cuzzy. Now, imagine you would like to load custom
