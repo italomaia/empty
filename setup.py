@@ -5,10 +5,11 @@ sensitive defaults to your project out of the box.
 
 """
 from setuptools import setup
+import empty
 
 setup(
     name='Empty',
-    version='0.2',
+    version=empty.__version__,
     license='BSD',
     url='https://github.com/italomaia/empty',
     author='Italo Maia',
