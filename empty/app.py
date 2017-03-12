@@ -9,6 +9,8 @@ __all__ = ['Empty', 'app_factory']
 import os
 import sys
 import six
+import errno
+import types
 import importlib
 
 from werkzeug.utils import import_string
@@ -17,9 +19,6 @@ from flask import Flask, render_template
 from .logging import LoggerMixin
 from .exceptions import BlueprintException
 from .exceptions import NoExtensionException
-
-
-PROJECT_PATH = os.path.abspath(os.path.dirname("."))
 
 # list of blueprint modules that should be loaded by default
 # this avoids a few problems, mostly with admin and models
@@ -31,9 +30,7 @@ DEFAULT_BP_MODULES = (
     'api',
 )
 
-# apps is a special folder where you can place your blueprints
-# adding it to path
-sys.path.insert(0, os.path.join(PROJECT_PATH, "apps"))
+PROJECT_PATH = os.path.abspath(os.path.dirname('.'))
 
 # python3 friendly
 string_types = six.string_types
@@ -47,10 +44,34 @@ class Empty(Flask, LoggerMixin):
         If environment variable available, overwrites class config.
 
         """
-        self.config.from_object(config)
+        # apps is a special folder where you can place your blueprints
+        # adding it to path
+        sys.path.insert(0, os.path.join(os.path.abspath('.'), "apps"))
 
         # could/should be available in server environment
-        self.config.from_envvar("FLASK_CONFIG", silent=True)
+        fc = os.getenv('FLASK_CONFIG')
+        ec = fc and self.load_module_from_filepath(fc) or None
+
+        if ec is not None:
+            for key in filter(lambda k: not k.startswith('_'), dir(ec)):
+                setattr(config, key, getattr(ec, key))
+
+        self.config.from_object(config)
+        self.add_blueprint_list(getattr(config, 'BLUEPRINTS', []))
+
+    def load_module_from_filepath(self, filename):
+        filepath = os.path.abspath(filename)
+        d = types.ModuleType('config')
+        d.__file__ = filepath
+        try:
+            with open(filename, mode='rb') as config_file:
+                exec(compile(config_file.read(), filepath, 'exec'), d.__dict__)
+        except IOError as e:
+            if e.errno in (errno.ENOENT, errno.EISDIR):
+                return False
+            e.strerror = 'Unable to load configuration file (%s)' % e.strerror
+            raise
+        return d
 
     def add_blueprint(self, name, kw):
         for module in self.config.get('BP_MODULES', DEFAULT_BP_MODULES):
@@ -228,7 +249,6 @@ def app_factory(
     config = config_str_to_obj(config)
 
     app.configure(config)
-    app.add_blueprint_list(blueprints or getattr(config, 'BLUEPRINTS', []))
     app.setup()
 
     return app
