@@ -52,6 +52,7 @@ class Empty(Flask, LoggerMixin):
         fc = os.getenv('FLASK_CONFIG')
         ec = fc and self.load_module_from_filepath(fc) or None
 
+        # overriding stuff
         if ec is not None:
             for key in filter(lambda k: not k.startswith('_'), dir(ec)):
                 setattr(config, key, getattr(ec, key))
@@ -74,6 +75,7 @@ class Empty(Flask, LoggerMixin):
         return d
 
     def add_blueprint(self, name, kw):
+        """Registers an blueprint and pre-loads available modules."""
         for module in self.config.get('BP_MODULES', DEFAULT_BP_MODULES):
             try:
                 __import__('%s.%s' % (name, module), fromlist=['*'])
@@ -114,11 +116,16 @@ class Empty(Flask, LoggerMixin):
         self.configure_views()
 
     def configure_logger(self):
+        """Auto configures a file and email logger."""
         self.configure_file_logger()
         self.configure_email_logger()
 
     def configure_error_handlers(self):
-        """Override this method if you're going for a API project."""
+        """
+        Auto configures default responses for common http error codes.
+
+        Override this method if your project is an API.
+        """
         @self.errorhandler(403)
         def forbidden_page(error):
             """
@@ -167,9 +174,13 @@ class Empty(Flask, LoggerMixin):
         pass
 
     def configure_template_extensions(self):
-        """Loads jinja2 extensions."""
-        # Example:
-        # self.jinja_env.add_extension('jinja2.ext.do')
+        """
+        Loads jinja2 extensions.
+
+        Something like this, should do:
+        > self.jinja_env.add_extension('jinja2.ext.do')
+        """
+        pass
 
     def configure_template_filters(self):
         """
@@ -179,10 +190,11 @@ class Empty(Flask, LoggerMixin):
         filters and tags to your jinja2 environment.
         By default, it adds date and datetime formatting
         filters.
+
+        Something like this, should do:
+        > self.add_template_filter(filter_function, 'filter_name')
         """
-        # Example:
-        # from . import filters
-        # self.add_template_filter(filters.format_date, 'date')
+        pass
 
     def configure_extensions(self):
         """Configure extensions like mail and login here."""
