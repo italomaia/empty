@@ -1,17 +1,27 @@
+#!/usr/bin/env python
+"""
+Empty is a light wrapper around Flask which adds some
+sensitive defaults to your project out of the box.
+
+"""
 from setuptools import setup
+import empty
 
 setup(
     name='Empty',
-    version='0.2',
+    version=empty.__version__,
     license='BSD',
     url='https://github.com/italomaia/empty',
-    author='Italo Moreira Campelo Maia',
+    author='Italo Maia',
     description='Wrapper which makes Flask development easier',
+    long_description=__doc__,
+    zip_safe=False,
     platforms='any',
-    packages=["empty"],
+    packages=['empty'],
     install_requires=[
         'Flask>=0.10'
     ],
+    test_suite='runtests.suite',
     classifiers=[
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
