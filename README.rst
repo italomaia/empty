@@ -63,6 +63,19 @@ called **EXTENSIONS** with the full path to your extension.
 
 Your extension will be loaded and initialized for you.
 
+Config
+======
+
+You're advised to create a python module to work as your project configuration.
+DEV, TEST or PROD specific configurations should be loaded through **FLASK_CONFIG**.
+
+That said, there are a few quite helpful configurations Empty will recognize
+by default. See the list below:
+
+- BLUEPRINTS - a list (['blog', 'messages',...]) or dictionary ({'blog': dict(**options), 'messages': dict(**options), ...}) describing which blueprints to load. Blueprints are loaded **by name** from an option **apps/** folder in your project root (preferably) or directly from the project root. 
+- EXTENSIONS - a list with the path to your extension instances. Something like this: ['extensions.db'] where 'extensions' is a module and db is an instance of your extension. If you define an "<EXT_INSTANCE_NAME>_init_kwargs" function where your extension instance is, its output will be used as extra arguments to your extension initialization routine.
+- BP_MODULES - list of modules  uto loaded from your blueprints. The default value is: ``('admin', 'models', 'schemas', 'views', 'api')``
+
 Click support
 =============
 
