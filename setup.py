@@ -19,7 +19,8 @@ setup(
     platforms='any',
     packages=['empty'],
     install_requires=[
-        'Flask>=0.10'
+        'six>=1.10.0',
+        'flask>=0.12.0'
     ],
     test_suite='runtests.suite',
     classifiers=[
@@ -30,6 +31,7 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ]
 )
