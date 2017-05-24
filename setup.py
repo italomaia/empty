@@ -5,7 +5,7 @@ sensitive defaults to your project out of the box.
 
 """
 from setuptools import setup
-from __info import version
+from empty.__info import version
 
 
 setup(
