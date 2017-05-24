@@ -5,11 +5,12 @@ sensitive defaults to your project out of the box.
 
 """
 from setuptools import setup
-import empty
+from __info import version
+
 
 setup(
-    name='Empty',
-    version=empty.__version__,
+    name='empty',
+    version=version,
     license='BSD',
     url='https://github.com/italomaia/empty',
     author='Italo Maia',
@@ -18,10 +19,7 @@ setup(
     zip_safe=False,
     platforms='any',
     packages=['empty'],
-    install_requires=[
-        'six>=1.10.0',
-        'flask>=0.12.0'
-    ],
+    install_requires=['flask>=0.12.2'],
     test_suite='runtests.suite',
     classifiers=[
         'Environment :: Web Environment',
@@ -29,7 +27,6 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Topic :: Software Development :: Libraries :: Python Modules'
