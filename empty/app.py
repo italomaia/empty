@@ -111,6 +111,7 @@ class Empty(Flask, LoggerMixin):
         self.configure_template_extensions()
         self.configure_template_filters()
         self.configure_extensions()
+        self.configure_commands()
         self.configure_before_request()
         self.configure_after_request()
         self.configure_views()
@@ -214,6 +215,11 @@ class Empty(Flask, LoggerMixin):
 
             init_fnc = getattr(ext, 'init_app', False) or ext
             init_fnc(self, **init_kwargs)
+
+    def configure_commands(self):
+        from .commands import routes
+
+        self.cli.add_command(routes, 'routes')
 
     def configure_after_request(self):
         """Configure routines to run after each request."""
