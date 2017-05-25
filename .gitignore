@@ -3,6 +3,11 @@
 .idea
 .tox
 .cache
-*.pyc
+.eggs
 
-Empty.egg-info
+__pycache__
+dist
+build
+
+*.egg-info
+*.pyc

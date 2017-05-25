@@ -1,5 +1,3 @@
-from flask import Flask
-
 import os
 import unittest
 
@@ -9,6 +7,7 @@ class TestEmpty(unittest.TestCase):
         os.unsetenv('FLASK_CONFIG')
 
     def test_init_without_params(self):
+        from flask import Flask
         from empty import Empty
 
         app = Empty('myapp')
