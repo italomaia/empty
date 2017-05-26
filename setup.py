@@ -8,7 +8,7 @@ from setuptools import setup
 
 
 setup(
-    name='empty',
+    name='Empty',
     version='0.3.3',
     license='BSD',
     url='https://github.com/italomaia/empty',
