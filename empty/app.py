@@ -246,7 +246,7 @@ def app_factory(
     config,
     app_name,
     blueprints=None,
-    templates_folder="templates",
+    template_folder="templates",
     base_application=Empty
 ):
     """
@@ -261,8 +261,10 @@ def app_factory(
     :returns: configured Flask instance
     :rtype: flask.Flask
     """
-    # explicitly pass templates folder to avoid environment problems
-    template_path = os.path.join(PROJECT_PATH, "templates")
+    # explicitly pass template folder to avoid environment problems
+    if template_folder is not None:
+        template_path = os.path.join(PROJECT_PATH, "templates")
+
     app = base_application(app_name, template_folder=template_path)
     config = config_str_to_obj(config)
 
