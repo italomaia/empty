@@ -88,9 +88,9 @@ class TestEmpty(unittest.TestCase):
 
     def test_config_load_blueprint(self):
         from empty import Empty
-        from test_empty import config
+        from empty import EmptyConfig
 
-        my_config = config.EmptyConfig(BLUEPRINTS=['app1'])
+        my_config = EmptyConfig(BLUEPRINTS=['app1'])
         my_app = Empty('myapp')
         my_app.configure(my_config)
 
