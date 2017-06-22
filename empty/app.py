@@ -9,8 +9,6 @@ __all__ = ['Empty', 'app_factory']
 import os
 import sys
 import six
-import errno
-import types
 import importlib
 
 from werkzeug.utils import import_string
@@ -80,9 +78,11 @@ class Empty(Flask, LoggerMixin):
         for blueprint_config in bp_list:
             name, kw = None, dict()
 
+            # use default configuration for blueprint
             if isinstance(blueprint_config, string_types):
                 name = blueprint_config
                 kw.update(dict(url_prefix='/' + name))
+            # use custom configuration
             elif isinstance(blueprint_config, (list, tuple)):
                 name = blueprint_config[0]
                 kw.update(blueprint_config[1])
