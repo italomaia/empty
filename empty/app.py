@@ -9,8 +9,6 @@ __all__ = ['Empty', 'app_factory']
 import os
 import sys
 import six
-import errno
-import types
 import importlib
 
 from werkzeug.utils import import_string
@@ -36,6 +34,13 @@ PROJECT_PATH = os.path.abspath(os.path.dirname('.'))
 string_types = six.string_types
 
 
+class EmptyConfig:
+    "Empty configuration class. Quite useful."
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key.upper(), value)
+
+
 class Empty(Flask, LoggerMixin):
     def configure(self, config):
         """
@@ -44,35 +49,19 @@ class Empty(Flask, LoggerMixin):
         If environment variable available, overwrites class config.
 
         """
+
         # apps is a special folder where you can place your blueprints
         # adding it to path
         sys.path.insert(0, os.path.join(os.path.abspath('.'), "apps"))
 
-        # could/should be available in server environment
-        fc = os.getenv('FLASK_CONFIG')
-        ec = fc and self.load_module_from_filepath(fc) or None
-
-        # overriding stuff
-        if ec is not None:
-            for key in filter(lambda k: not k.startswith('_'), dir(ec)):
-                setattr(config, key, getattr(ec, key))
-
+        config = config or EmptyConfig()
         self.config.from_object(config)
-        self.add_blueprint_list(getattr(config, 'BLUEPRINTS', []))
 
-    def load_module_from_filepath(self, filename):
-        filepath = os.path.abspath(filename)
-        d = types.ModuleType('config')
-        d.__file__ = filepath
-        try:
-            with open(filename, mode='rb') as config_file:
-                exec(compile(config_file.read(), filepath, 'exec'), d.__dict__)
-        except IOError as e:
-            if e.errno in (errno.ENOENT, errno.EISDIR):
-                return False
-            e.strerror = 'Unable to load configuration file (%s)' % e.strerror
-            raise
-        return d
+        # could/should be available in server environment
+        if os.getenv('FLASK_CONFIG'):
+            self.config.from_envvar('FLASK_CONFIG')
+
+        self.add_blueprint_list(getattr(config, 'BLUEPRINTS', []))
 
     def add_blueprint(self, name, kw):
         """Registers an blueprint and pre-loads available modules."""
@@ -89,9 +78,11 @@ class Empty(Flask, LoggerMixin):
         for blueprint_config in bp_list:
             name, kw = None, dict()
 
+            # use default configuration for blueprint
             if isinstance(blueprint_config, string_types):
                 name = blueprint_config
                 kw.update(dict(url_prefix='/' + name))
+            # use custom configuration
             elif isinstance(blueprint_config, (list, tuple)):
                 name = blueprint_config[0]
                 kw.update(blueprint_config[1])
@@ -243,17 +234,17 @@ def config_str_to_obj(cfg):
 
 
 def app_factory(
-    config,
     app_name,
+    config=None,
     blueprints=None,
-    templates_folder="templates",
+    template_folder="templates",
     base_application=Empty
 ):
     """
     App factory for Empty.
 
-    :param config: plain Flask configuration file path
     :param app_name: your application name
+    :param config: plain Flask configuration file path
     :param blueprints: list of blueprint configurations to load; overrides
         default blueprints list
     :param base_application: class used to build your project; should
@@ -261,8 +252,10 @@ def app_factory(
     :returns: configured Flask instance
     :rtype: flask.Flask
     """
-    # explicitly pass templates folder to avoid environment problems
-    template_path = os.path.join(PROJECT_PATH, "templates")
+    # explicitly pass template folder to avoid environment problems
+    template_path = template_folder and \
+        os.path.join(PROJECT_PATH, template_folder) or None
+
     app = base_application(app_name, template_folder=template_path)
     config = config_str_to_obj(config)
 

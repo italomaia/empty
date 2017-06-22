@@ -8,11 +8,12 @@ from setuptools import setup
 
 
 setup(
-    name='empty',
-    version='0.3.3',
+    name='Empty',
+    version='0.4',
     license='BSD',
     url='https://github.com/italomaia/empty',
     author='Italo Maia',
+    author_email='italo.maia@gmail.com',
     description='Wrapper which makes Flask development easier',
     long_description=__doc__,
     zip_safe=False,
