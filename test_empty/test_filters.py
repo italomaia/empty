@@ -1,6 +1,6 @@
 from empty import Empty
+from empty import EmptyConfig
 from empty import app_factory
-from .config import EmptyConfig
 
 from flask import render_template_string
 
@@ -23,7 +23,8 @@ class EmptyWithDatetimeFilter(Empty):
 class TestFilters(unittest.TestCase):
     def test_date_output_format(self):
         app = app_factory(
-            EmptyConfig(), 'myapp', base_application=EmptyWithDateFilter)
+            'myapp', EmptyConfig(),
+            base_application=EmptyWithDateFilter)
         today = date(year=2015, month=10, day=5)
 
         with app.app_context():
@@ -33,12 +34,11 @@ class TestFilters(unittest.TestCase):
     def test_date_output_with_settings(self):
         from datetime import date
 
-        class Config:
-            DATE_FORMAT = '%d/%m/%Y'
-
         today = date(year=2015, month=10, day=5)
         app = app_factory(
-            Config, 'myapp', base_application=EmptyWithDateFilter)
+            'myapp',
+            EmptyConfig(date_format='%d/%m/%Y'),
+            base_application=EmptyWithDateFilter)
 
         with app.app_context():
             text = render_template_string("{{today|date}}", today=today)
@@ -46,8 +46,9 @@ class TestFilters(unittest.TestCase):
 
     def test_datetime_output_format(self):
         app = app_factory(
-            EmptyConfig(), 'myapp',
+            'myapp', EmptyConfig(),
             base_application=EmptyWithDatetimeFilter)
+
         now = datetime(
             year=2015,
             month=10,
@@ -62,9 +63,6 @@ class TestFilters(unittest.TestCase):
             assert text == "2015/10/05 05:08"
 
     def test_datetime_filter_with_settings(self):
-        class Config:
-            DATETIME_FORMAT = '%d/%m/%Y %H:%M'
-
         now = datetime(
             year=2015,
             month=10,
@@ -73,7 +71,9 @@ class TestFilters(unittest.TestCase):
             minute=8,
             second=10)
         app = app_factory(
-            Config, 'myapp', base_application=EmptyWithDatetimeFilter)
+            'myapp',
+            EmptyConfig(datetime_format='%d/%m/%Y %H:%M'),
+            base_application=EmptyWithDatetimeFilter)
 
         with app.app_context():
             text = render_template_string("{{now|datetime}}", now=now)
