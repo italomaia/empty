@@ -9,7 +9,7 @@ from setuptools import setup
 
 setup(
     name='Empty',
-    version='0.3.3',
+    version='0.4',
     license='BSD',
     url='https://github.com/italomaia/empty',
     author='Italo Maia',
