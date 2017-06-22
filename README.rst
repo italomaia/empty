@@ -24,7 +24,8 @@ Creating your firs Empty application is quite simple. Just do the following:
     from empty import app_factory
     import config  # your config module
 
-    app = app_factory(config, 'project-name')
+    # config can also be None; no problem
+    app = app_factory('project-name', config)
     app.run()
 
     # or
@@ -46,9 +47,39 @@ pointing to the configuration file, which can be a python file.
     # or
     FLASK_CONFIG=config/testing.py
 
-Now, what if you want to add a few extensions to your project?
-In your configuration file (FLASK_CONFIG), set a variable
-called **EXTENSIONS** with the full path to your extension.
+Blueprints
+==========
+
+For Empty to load your blueprints for you, make sure
+the blueprint instance can be imported directly from
+the blueprint package or module. A good suggestion
+could be to declare your blueprint instance like this:
+
+    apps/myblueprint
+    .. __init__.py (import blueprint instance here)
+    .. bp.py (declare blueprint instance here)
+
+Then, in your config module/object/whatever, declare
+you wish to load your blueprint, like this:
+
+.. code:: python
+
+    # loading it this way, url_prefix will be /myblueprint
+    BLUEPRINTS = ['myblueprint']
+    # like this, you can provide custom configuration
+    BLUEPRINTS = [
+        ('myblueprint', {
+            # .. blueprint configuration goes here ..
+        })
+    ]
+
+Extensions
+==========
+
+Flask extensions are a great way to shorten your work.
+To load extensions with Empty, create a module,
+declare your extensions there and load them through
+your configuration.
 
 .. code:: python
 
@@ -56,12 +87,25 @@ called **EXTENSIONS** with the full path to your extension.
     from flask_sqlalchemy import SQLAlchemy
     db = SQLAlchemy()
 
-    # config/dev.py
+    # config.py
     EXTENSIONS = [
         'extensions.db'
     ]  # and that's it!
 
-Your extension will be loaded and initialized for you.
+The code above loads and initializes the extensions for you.
+Some extensions, like flask-security, may require extra
+arguments (besides app) to load properly. For these cases,
+declare a function besides your extension instance in the
+following manner:
+
+.. code:: python
+
+    def <extension_instance_name>_init_kwargs():
+        return ext_kwargs
+
+**ext_kwargs** should be a dict with the necessary extra
+**init_app** parameters.
+
 
 Click support
 =============
