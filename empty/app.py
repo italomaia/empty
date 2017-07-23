@@ -267,7 +267,7 @@ def app_factory(
     app = base_application(app_name, template_folder=template_path)
     config = config_str_to_obj(config)
 
-    app.configure(config)
+    app.configure(config, blueprints)
     app.setup()
 
     return app
