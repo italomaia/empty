@@ -110,6 +110,8 @@ following manner:
 Config
 ======
 
+`example config file <https://github.com/italomaia/flask-vue-semantic-docker/blob/master/app/config.py>`_
+
 You're advised to create a python module to work as your project configuration.
 DEV, TEST or PROD specific configurations should be loaded through **FLASK_CONFIG**.
 
