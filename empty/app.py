@@ -204,7 +204,7 @@ class Empty(Flask, LoggerMixin):
             try:
                 # do you need extra arguments to initialize
                 # your extension?
-                init_kwargs = import_string('%s_init_kwargs')()
+                init_kwargs = import_string('%s_init_kwargs' % ext_path)()
             except ImportError:
                 # maybe not
                 init_kwargs = dict()
