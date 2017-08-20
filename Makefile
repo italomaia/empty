@@ -5,6 +5,9 @@ all: test
 test:
 	@python setup.py test
 
+publish:
+	@python setup.py sdist upload
+
 clean: clean-pyc
 
 clean-pyc:
