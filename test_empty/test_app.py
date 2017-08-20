@@ -8,7 +8,7 @@ class TestEmptyConfig(unittest.TestCase):
 
         config = EmptyConfig()
         attrs = dir(config)
-        public_attrs = filter(lambda n: not n.startswith('_'), attrs)
+        public_attrs = list(filter(lambda n: not n.startswith('_'), attrs))
         self.assertEqual(len(public_attrs), 0)
 
     def test_accepts_params(self):
@@ -16,7 +16,7 @@ class TestEmptyConfig(unittest.TestCase):
 
         config = EmptyConfig(SOMETHING=True)
         attrs = dir(config)
-        public_attrs = filter(lambda n: not n.startswith('_'), attrs)
+        public_attrs = list(filter(lambda n: not n.startswith('_'), attrs))
         self.assertEqual(getattr(config, 'SOMETHING'), True)
         self.assertEqual(len(public_attrs), 1)
 
@@ -85,6 +85,19 @@ class TestEmpty(unittest.TestCase):
 
         app = Empty('myapp')  # noqa: F841
         self.assertTrue('apps', sys.path[0])
+
+    def test_config_load_extension(self):
+        from empty import Empty
+        from empty import EmptyConfig
+
+        config = EmptyConfig(EXTENSIONS=[
+            'extensions.ext'
+        ])
+        app = Empty('myapp')
+        app.configure(config)
+        app.setup()
+        ext = app.extensions['ext']
+        self.assertTrue('test' in ext.options)
 
     def test_config_load_blueprint(self):
         from empty import Empty

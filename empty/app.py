@@ -9,6 +9,7 @@ __all__ = ['Empty', 'app_factory']
 import os
 import sys
 import six
+import traceback
 import importlib
 
 from werkzeug.utils import import_string
@@ -42,7 +43,7 @@ class EmptyConfig:
 
 
 class Empty(Flask, LoggerMixin):
-    def configure(self, config):
+    def configure(self, config, blueprints=None):
         """
         Loads configuration class into flask app.
 
@@ -61,15 +62,19 @@ class Empty(Flask, LoggerMixin):
         if os.getenv('FLASK_CONFIG'):
             self.config.from_envvar('FLASK_CONFIG')
 
-        self.add_blueprint_list(getattr(config, 'BLUEPRINTS', []))
+        blueprints = blueprints or getattr(config, 'BLUEPRINTS', [])
+        self.add_blueprint_list(blueprints)
 
     def add_blueprint(self, name, kw):
         """Registers an blueprint and pre-loads available modules."""
         for module in self.config.get('BP_MODULES', DEFAULT_BP_MODULES):
             try:
                 __import__('%s.%s' % (name, module), fromlist=['*'])
-            except (ImportError, AttributeError):
-                pass
+            except ImportError:
+                self.logger.warn('Could not import %s for %s' % (module, name))
+            except Exception as e:
+                self.logger.error('Error importing %s for %s' % (module, name))
+                self.logger.error(traceback.format_exc())
 
         blueprint = import_string('%s.%s' % (name, 'app'))
         self.register_blueprint(blueprint, **kw)
@@ -199,7 +204,7 @@ class Empty(Flask, LoggerMixin):
             try:
                 # do you need extra arguments to initialize
                 # your extension?
-                init_kwargs = import_string('%s_init_kwargs')()
+                init_kwargs = import_string('%s_init_kwargs' % ext_path)()
             except ImportError:
                 # maybe not
                 init_kwargs = dict()
@@ -208,9 +213,12 @@ class Empty(Flask, LoggerMixin):
             init_fnc(self, **init_kwargs)
 
     def configure_commands(self):
+        from flask.cli import with_appcontext
         from .commands import routes
 
-        self.cli.add_command(routes, 'routes')
+        # add_command does not wrap command with context
+        # so, we have to register it in a different way
+        self.cli.add_command(with_appcontext(routes), 'routes')
 
     def configure_after_request(self):
         """Configure routines to run after each request."""
@@ -259,7 +267,7 @@ def app_factory(
     app = base_application(app_name, template_folder=template_path)
     config = config_str_to_obj(config)
 
-    app.configure(config)
+    app.configure(config, blueprints)
     app.setup()
 
     return app

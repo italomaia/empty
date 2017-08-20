@@ -3,7 +3,7 @@
 all: test
 
 test:
-	@python test_empty/runtests.py
+	@python setup.py test
 
 clean: clean-pyc
 
