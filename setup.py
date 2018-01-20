@@ -19,7 +19,10 @@ setup(
     zip_safe=False,
     platforms='any',
     packages=['empty'],
-    install_requires=['flask>=0.12.2'],
+    install_requires=[
+        'flask>=0.12.2',
+        'six>=1.11.0',
+    ],
     test_suite='runtests.suite',
     classifiers=[
         'Environment :: Web Environment',
