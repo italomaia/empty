@@ -56,11 +56,16 @@ class Empty(Flask, LoggerMixin):
         sys.path.insert(0, os.path.join(os.path.abspath('.'), "apps"))
 
         config = config or EmptyConfig()
-        self.config.from_object(config)
+
+        if isinstance(config, dict):
+            self.config.from_mapping(config)
+        elif isinstance(config, string_types) and config.endswith('.json'):
+            self.config.endswith('.json')
+        else:
+            self.config.from_object(config)
 
         # could/should be available in server environment
-        if os.getenv('FLASK_CONFIG'):
-            self.config.from_envvar('FLASK_CONFIG')
+        self.config.from_envvar('FLASK_CONFIG', True)
 
         blueprints = blueprints or getattr(config, 'BLUEPRINTS', [])
         self.add_blueprint_list(blueprints)
