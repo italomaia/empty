@@ -9,7 +9,7 @@ from setuptools import setup
 
 setup(
     name='Empty',
-    version='0.4.3',
+    version='0.4.4',
     license='BSD',
     url='https://github.com/italomaia/empty',
     author='Italo Maia',
@@ -20,7 +20,7 @@ setup(
     platforms='any',
     packages=['empty'],
     install_requires=[
-        'flask>=0.12.2',
+        'flask>=1.0',
         'six>=1.11.0',
     ],
     test_suite='runtests.suite',
