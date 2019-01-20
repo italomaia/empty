@@ -20,7 +20,7 @@ setup(
     platforms='any',
     packages=['empty'],
     install_requires=[
-        'flask>=0.12.2',
+        'flask>=1.0',
         'six>=1.11.0',
     ],
     test_suite='runtests.suite',
