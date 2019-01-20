@@ -57,11 +57,11 @@ class Empty(Flask, LoggerMixin):
 
         config = config or EmptyConfig()
 
-        if isinstance(config, dict):
-            self.config.from_mapping(config)
-        elif isinstance(config, string_types) and config.endswith('.json'):
-            self.config.endswith('.json')
+        if isinstance(config, string_types):
+            self.config.from_pyfile(config)
+            config = __import__(config)
         else:
+            # objects are supported
             self.config.from_object(config)
 
         # could/should be available in server environment
